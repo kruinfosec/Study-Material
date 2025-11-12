@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Notes</title>
+    <link id="prism-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <link id="prism-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+            
+            /* Light Theme - High Contrast */
+            --bg-light: #ffffff;
+            --text-light: #0d1117;
+            --header-light: #000000;
+            --border-light: #d0d7de;
+            --link-light: #005cc5;
+            --sidebar-bg-light: #f6f8fa;
+            --sidebar-link-light: #24292e;
+            --sidebar-link-active-light: #005cc5;
+
+            /* Dark Theme - High Contrast */
+            --bg-dark: #0d1117;
+            --text-dark: #e6edf3;
+            --header-dark: #ffffff;
+            --border-dark: #30363d;
+            --link-dark: #58a6ff;
+            --sidebar-bg-dark: #161b22;
+            --sidebar-link-dark: #c9d1d9;
+            --sidebar-link-active-dark: #58a6ff;
+        }
+
+        html {
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        html[data-theme='light'] {
+            --bg-color: var(--bg-light);
+            --text-color: var(--text-light);
+            --header-color: var(--header-light);
+            --border-color: var(--border-light);
+            --link-color: var(--link-light);
+            --sidebar-bg: var(--sidebar-bg-light);
+            --sidebar-link: var(--sidebar-link-light);
+            --sidebar-link-active: var(--sidebar-link-active-light);
+        }
+
+        html[data-theme='dark'] {
+            --bg-color: var(--bg-dark);
+            --text-color: var(--text-dark);
+            --header-color: var(--header-dark);
+            --border-color: var(--border-dark);
+            --link-color: var(--link-dark);
+            --sidebar-bg: var(--sidebar-bg-dark);
+            --sidebar-link: var(--sidebar-link-dark);
+            --sidebar-link-active: var(--sidebar-link-active-dark);
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            margin: 0;
+        }
+
+        #sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+            transition: width 0.3s ease, padding 0.3s ease, background-color 0.2s;
+            z-index: 10;
+        }
+        #sidebar-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        #sidebar h2, #sidebar #toc {
+            transition: opacity 0.3s ease;
+        }
+        #sidebar ul { list-style: none; padding: 0; }
+        #sidebar ul li a {
+            display: block;
+            padding: 6px 10px;
+            text-decoration: none;
+            color: var(--sidebar-link);
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        #sidebar ul li a:hover { background-color: var(--border-color); }
+        #sidebar ul ul { padding-left: 20px; }
+        #sidebar ul ul li a { font-size: 0.85em; }
+
+        #main-content {
+            margin-left: 280px;
+            padding: 30px 60px;
+            width: calc(100% - 280px);
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Minimized Sidebar State */
+        html.sidebar-minimized #sidebar {
+            width: 0;
+            padding: 20px 0;
+            overflow: hidden;
+            border-right-color: transparent;
+        }
+        html.sidebar-minimized #sidebar h2,
+        html.sidebar-minimized #sidebar #toc {
+            opacity: 0;
+        }
+        html.sidebar-minimized #main-content {
+            margin-left: 60px;
+        }
+        html.sidebar-minimized #sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 15px;
+            width: 40px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--header-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            scroll-margin-top: 20px;
+        }
+        a { color: var(--link-color); }
+        hr { border-color: var(--border-color); opacity: 0.5; }
+        pre { border-radius: 5px; }
+        
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: var(--text-color);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="sidebar">
+        <button id="sidebar-toggle">☰</button>
+        <h2>Navigation</h2>
+        <ul id="toc"></ul>
+    </nav>
+
+    <button id="theme-toggle">Toggle Theme</button>
+
+    <main id="main-content">
+        <h1 id="comprehensive-notes-data-structures-algorithms-in-python">Comprehensive Notes: Data Structures &amp; Algorithms in Python</h1>
+        <hr />
+        <h3 id="part-1-python-programming-fundamentals"><strong>Part 1: Python &amp; Programming Fundamentals</strong></h3>
+        <h4 id="introduction-why-data-structures"><strong>1.1. Introduction: Why Data Structures?</strong></h4>
+        <p>At its core, computer science is about solving problems. Data Structures and Algorithms are the fundamental tools for doing so efficiently.</p>
+        <ul>
+            <li><strong>Data:</strong> Represents information. In programming, this can be anything from a user’s name to a complex financial model.</li>
+            <li><strong>Data Structure:</strong> A particular way of <strong>organizing, storing, and managing data</strong> in a computer so that it can be accessed and modified efficiently. It’s not just about storing data, but about storing it in a way that makes sense for the problem you’re trying to solve.</li>
+            <li><strong>Algorithm:</strong> A step-by-step procedure or formula for solving a problem.</li>
+        </ul>
+        <p><strong>The Relationship:</strong> The choice of data structure has a massive impact on the efficiency of the algorithms that operate on that data.</p>
+        <p><strong>Example:</strong> Imagine finding a name in a phone book. * <strong>Unsorted List (Bad Data Structure):</strong> If the names were in a random order, you’d have to check every single name from the beginning until you found the one you were looking for (a <em>Linear Search</em>). For a million names, this could take a million checks. * <strong>Sorted List (Good Data Structure):</strong> Since a phone book is sorted alphabetically, you can open it to the middle, see if the name you want is before or after that point, and immediately discard half the book. You repeat this process, halving the search space each time (a <em>Binary Search</em>). For a million names, this takes at most 20 checks.</p>
+        <p>Choosing the right data structure (a sorted list) allowed for a vastly more efficient algorithm. This is the core reason we study Data Structures: to write efficient, scalable, and robust software.</p>
+        <hr />
+        <h4 id="first-steps-in-python"><strong>1.2. First Steps in Python</strong></h4>
+        <ul>
+            <li><p><strong>Your First Program:</strong> The “Hello, World!” program is a tradition. It’s a simple program that prints the text “Hello, World!” to the screen. In Python, it’s just one line.</p>
+            <pre><code class="language-python">print("Hello, World!")</code></pre>
+            <p>The <code>print()</code> function is a built-in Python function that outputs text to the console.</p></li>
+            <li><p><strong>Python’s Execution Cycle:</strong> When you run a Python script (e.g., <code>my_program.py</code>), here’s what happens:</p>
+            <ol type="1">
+                <li><strong>Compilation to Bytecode:</strong> The Python interpreter first compiles your human-readable source code into a set of intermediate instructions called <strong>bytecode</strong>. This is a lower-level, platform-independent representation of your code. This bytecode is stored in files with a <code>.pyc</code> extension in a <code>__pycache__</code> folder. This step is done to speed up subsequent executions; if you run the same file again without changing it, the interpreter can skip the compilation and use the existing <code>.pyc</code> file.</li>
+                <li><strong>Execution by the PVM:</strong> The bytecode is then sent to the <strong>Python Virtual Machine (PVM)</strong>. The PVM is the runtime engine of Python; it’s the component that actually reads the bytecode and executes the instructions one by one.</li>
+            </ol></li>
+        </ul>
+        <hr />
+        <h4 id="core-python-syntax"><strong>1.3. Core Python Syntax</strong></h4>
+        <ul>
+            <li><strong>Variables &amp; Data Types:</strong> (As covered before) Variables store data. Python is dynamically typed.
+                <ul>
+                    <li><code>int</code>: <code>10</code>, <code>-5</code></li>
+                    <li><code>float</code>: <code>3.14</code>, <code>-0.01</code></li>
+                    <li><code>str</code>: “Hello”, ‘World’</li>
+                    <li><code>bool</code>: <code>True</code>, <code>False</code></li>
+                </ul>
+            </li>
+            <li><strong>Control Flow:</strong>
+                <ul>
+                    <li><p><strong><code>if/elif/else</code>:</strong> For making decisions.</p>
+                    <pre><code class="language-python">score = 85
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+else:
+    grade = "C"</code></pre></li>
+                    <li><p><strong><code>for</code> loop:</strong> For iterating over sequences.</p>
+                    <pre><code class="language-python"># Loop over a list
+for fruit in ["apple", "banana", "cherry"]:
+    print(fruit)
+
+# Loop a specific number of times
+for i in range(5): # 0 to 4
+    print(i)</code></pre></li>
+                    <li><p><strong><code>while</code> loop:</strong> For looping as long as a condition is true.</p>
+                    <pre><code class="language-python">count = 0
+while count < 5:
+    print(count)
+    count += 1 # Increment count</code></pre></li>
+                </ul>
+            </li>
+            <li><strong>Functions:</strong> Reusable blocks of code that perform a specific action.
+                <ul>
+                    <li><strong>Definition:</strong> Use the <code>def</code> keyword.</li>
+                    <li><strong>Arguments:</strong> Data you pass into the function.</li>
+                    <li><strong>Return Value:</strong> Data the function sends back.</li>
+                    <li><strong>Scope:</strong> Where variables are accessible. Variables defined inside a function are local to it.</li>
+                </ul>
+                <pre><code class="language-python">def greet(name):
+    """This is a docstring, explaining the function."""
+    message = f"Hello, {name}!" # 'message' is a local variable
+    return message
+
+# Calling the function
+greeting = greet("Alice")
+print(greeting) # Output: Hello, Alice!</code></pre>
+            </li>
+        </ul>
+        <h4 id="object-oriented-programming-oop-in-python"><strong>1.4. Object-Oriented Programming (OOP) in Python</strong></h4>
+        <p>OOP is a programming paradigm based on the concept of “objects”, which can contain data (attributes) and code (methods).</p>
+        <ul>
+            <li><p><strong>Core OOP Concepts:</strong></p>
+                <ul>
+                    <li><strong>Class:</strong> A blueprint for creating objects.</li>
+                    <li><strong>Object:</strong> An instance of a class.</li>
+                    <li><strong>Encapsulation:</strong> Bundling data (attributes) and methods that operate on the data into a single unit (a class). This hides the internal state of an object from the outside.</li>
+                    <li><strong>Abstraction:</strong> Hiding complex implementation details and showing only the necessary features of an object.</li>
+                </ul>
+            </li>
+            <li><p><strong>Python Inheritance:</strong> A way to form new classes using classes that have already been defined. The new class (child class) inherits attributes and methods from the existing class (parent class). This promotes code reuse.</p>
+            <pre><code class="language-python">class Animal: # Parent class
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        raise NotImplementedError("Subclass must implement abstract method")
+
+class Dog(Animal): # Child class
+    def speak(self):
+        return f"{self.name} says Woof!"
+
+class Cat(Animal): # Child class
+    def speak(self):
+        return f"{self.name} says Meow!"
+
+my_dog = Dog("Rex")
+my_cat = Cat("Whiskers")
+print(my_dog.speak()) # Output: Rex says Woof!
+print(my_cat.speak()) # Output: Whiskers says Meow!</code></pre></li>
+        </ul>
+        <hr />
+        <h3 id="part-2-algorithms-and-complexity"><strong>Part 2: Algorithms &amp; Complexity</strong></h3>
+        <h4 id="big-o-notation"><strong>2.1. Big O Notation</strong></h4>
+        <p><strong>The Problem:</strong> How do we measure the efficiency of an algorithm? We can’t just time it, because the result depends on the computer’s speed and the size of the input. We need a standardized way to describe how the runtime or space requirements of an algorithm grow as the input size (n) grows.</p>
+        <p><strong>The Concept:</strong> Big O notation describes the <strong>worst-case scenario</strong> or the upper bound of an algorithm’s complexity. It tells us how the number of operations scales with the input size, ignoring constants and lower-order terms.</p>
+        <p><strong>Common Big O Complexities:</strong></p>
+        <ul>
+            <li><strong>O(1) - Constant Time:</strong> The runtime is always the same, regardless of the input size.<ul><li><strong>Example:</strong> Accessing an element in a list by its index (<code>my_list[5]</code>).</li></ul></li>
+            <li><strong>O(log n) - Logarithmic Time:</strong> The runtime grows logarithmically. The algorithm halves the search space with each step.<ul><li><strong>Example:</strong> Binary search in a sorted array.</li></ul></li>
+            <li><strong>O(n) - Linear Time:</strong> The runtime grows linearly with the input size.<ul><li><strong>Example:</strong> Searching for an element in an unsorted list (linear search).</li></ul></li>
+            <li><strong>O(n log n) - Log-Linear Time:</strong> A very common and efficient complexity for sorting algorithms.<ul><li><strong>Example:</strong> Merge Sort, Heapsort.</li></ul></li>
+            <li><strong>O(n^2) - Quadratic Time:</strong> The runtime grows quadratically. Often involves nested loops over the input.<ul><li><strong>Example:</strong> Bubble Sort, Selection Sort.</li></ul></li>
+            <li><strong>O(2^n) - Exponential Time:</strong> The runtime doubles with each addition to the input. Becomes unusable very quickly.<ul><li><strong>Example:</strong> A naive recursive solution for the Fibonacci sequence.</li></ul></li>
+        </ul>
+        <hr />
+        <h4 id="searching-algorithms"><strong>2.2. Searching Algorithms</strong></h4>
+        <p><strong>The Problem:</strong> You have a list of data, and you need to find out if a specific item exists within it.</p>
+        <h5 id="linear-search"><strong>2.2.1. Linear Search</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> The simplest possible approach. Start at the beginning and check every element one by one until you either find the target or reach the end. It works on <strong>any list</strong>, sorted or not.</li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n)</strong>. In the worst case, you check every item. Space: <strong>O(1)</strong>.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">def linear_search(data_list, target):
+    # data_list: The list of items to search through.
+    # target: The value you are looking for.
+
+    # Use enumerate to get both the index and the value of each item in the list.
+    for index, value in enumerate(data_list):
+        # Compare the current item's value with the target value.
+        if value == target:
+            # If they match, the target is found.
+            print(f"Target '{target}' found at index: {index}")
+            # Return the index where the target was found.
+            return index
+    
+    # If the loop completes without finding the target, it's not in the list.
+    print(f"Target '{target}' was not found in the list.")
+    # Return -1 to indicate that the target was not found.
+    return -1
+
+# --- Usage Example ---
+my_list = [22, 8, 15, 42, 99, 4, 17]
+linear_search(my_list, 42)  # Will find the target
+linear_search(my_list, 100) # Will not find the target
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="binary-search"><strong>2.2.2. Binary Search</strong></h5>
+        <ul>
+            <li><strong>Prerequisite:</strong> The data must be <strong>sorted</strong>.</li>
+            <li><strong>Methodology:</strong> A much faster "divide and conquer" algorithm.
+                <ol type="1">
+                    <li>Look at the middle element.</li>
+                    <li>If it's the target, you're done.</li>
+                    <li>If the target is smaller, you know it must be in the left half. Discard the right half.</li>
+                    <li>If the target is larger, you know it must be in the right half. Discard the left half.</li>
+                    <li>Repeat until you find the target or run out of list to check.</li>
+                </ol>
+            </li>
+            <li><strong>Analysis:</strong> Time: <strong>O(log n)</strong>. Incredibly fast. For a list of 1 million items, it takes at most ~20 comparisons. Space: <strong>O(1)</strong> for the iterative version.</li>
+            <li><strong>Code (Iterative):</strong>
+            <pre><code class="language-python">def binary_search(sorted_data, target):
+    # sorted_data: A list of items that is already in ascending order.
+    # target: The value you are looking for.
+
+    # Initialize two pointers: 'low' at the start of the list and 'high' at the end.
+    low = 0
+    high = len(sorted_data) - 1
+
+    # Loop as long as the 'low' pointer is less than or equal to the 'high' pointer.
+    # If low becomes greater than high, it means the target is not in the list.
+    while low <= high:
+        # Calculate the middle index. Use // for integer division to avoid floats.
+        mid = (low + high) // 2
+        # Get the value at the middle index.
+        mid_val = sorted_data[mid]
+
+        # Compare the middle value with the target.
+        if mid_val == target:
+            # If they are equal, we found the target.
+            print(f"Target '{target}' found at index: {mid}")
+            # Return the index.
+            return mid
+        # If the target is greater than the middle value...
+        elif target > mid_val:
+            # ...we know the target must be in the right half of the current search space.
+            # So, we move the 'low' pointer to one position past the middle.
+            low = mid + 1
+        # Otherwise (if the target is less than the middle value)...
+        else:
+            # ...we know the target must be in the left half.
+            # So, we move the 'high' pointer to one position before the middle.
+            high = mid - 1
+
+    # If the loop finishes, the target was not found.
+    print(f"Target '{target}' was not found in the list.")
+    return -1
+
+# --- Usage Example ---
+my_sorted_list = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+binary_search(my_sorted_list, 23) # Will find the target
+binary_search(my_sorted_list, 50) # Will not find the target
+</code></pre></li>
+        </ul>
+        <hr />
+        <h4 id="sorting-algorithms"><strong>2.3. Sorting Algorithms</strong></h4>
+        <p>Sorting is a fundamental problem in computer science. Understanding how different sorting algorithms work provides insight into algorithm design and analysis.</p>
+        <h5 id="bubble-sort"><strong>2.3.1. Bubble Sort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> Repeatedly steps through the list, compares each pair of adjacent items, and swaps them if they are in the wrong order. After each pass, the next largest element "bubbles" up to its correct spot.</li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n²)</strong>. Space: O(1). Very slow for most uses. Its main value is being simple to understand.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">def bubble_sort(data_list):
+    # Get the total number of elements in the list.
+    n = len(data_list)
+
+    # Outer loop for the number of passes. We need n-1 passes to sort n elements.
+    for i in range(n - 1):
+        # Inner loop for comparing adjacent elements in each pass.
+        # The range decreases with each pass, as the largest elements are already sorted at the end.
+        for j in range(0, n - i - 1):
+            # Compare the current element with the next one.
+            if data_list[j] > data_list[j + 1]:
+                # If the current element is greater, swap them.
+                # This is a classic Python tuple swap.
+                data_list[j], data_list[j + 1] = data_list[j + 1], data_list[j]
+    
+    # Return the sorted list.
+    return data_list
+
+# --- Usage Example ---
+my_list = [64, 34, 25, 12, 22, 11, 90]
+print(f"Original List: {my_list}")
+sorted_list = bubble_sort(my_list.copy()) # Use .copy() to keep the original list unchanged
+print(f"Bubble Sorted: {sorted_list}")
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="selection-sort"><strong>2.3.2. Selection Sort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> Repeatedly find the minimum element from the unsorted part of the list and move it to the beginning of the sorted part.</li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n²)</strong>. Space: O(1). Also slow, but can be useful if the cost of swapping elements is high, as it makes at most `n` swaps.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">def selection_sort(data_list):
+    # Get the total number of elements.
+    n = len(data_list)
+
+    # Outer loop to move the boundary of the sorted subarray.
+    for i in range(n):
+        # Assume the first element of the unsorted part is the minimum.
+        min_index = i
+
+        # Inner loop to find the actual minimum element in the unsorted part.
+        for j in range(i + 1, n):
+            # If we find an element smaller than our current minimum...
+            if data_list[j] < data_list[min_index]:
+                # ...update the index of the minimum element.
+                min_index = j
+        
+        # After finding the minimum, swap it with the first element of the unsorted part.
+        data_list[i], data_list[min_index] = data_list[min_index], data_list[i]
+        
+    # Return the sorted list.
+    return data_list
+
+# --- Usage Example ---
+my_list = [64, 34, 25, 12, 22, 11, 90]
+print(f"Original List: {my_list}")
+sorted_list = selection_sort(my_list.copy())
+print(f"Selection Sorted: {sorted_list}")
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="insertion-sort"><strong>2.3.3. Insertion Sort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> Builds the final sorted list one item at a time. It takes each element from the input and "inserts" it into its correct position in the already-sorted part of the list.</li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n²)</strong>. Space: O(1). It's much more efficient in practice than Bubble or Selection sort if the list is already "mostly sorted".</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">def insertion_sort(data_list):
+    # Start from the second element (index 1) as the first element is already "sorted".
+    for i in range(1, len(data_list)):
+        # This is the element we want to insert into the sorted portion.
+        key = data_list[i]
+        
+        # Start comparing with the element before the key.
+        j = i - 1
+        
+        # Move elements of the sorted portion (data_list[0..i-1]) that are greater than the key
+        # one position to the right to make space for the key.
+        while j >= 0 and key < data_list[j]:
+            # Shift the element at index j to the right (to j+1).
+            data_list[j + 1] = data_list[j]
+            # Move to the next element on the left to continue comparing.
+            j -= 1
+        
+        # Place the key in its correct position (just after the element smaller than it).
+        data_list[j + 1] = key
+        
+    return data_list
+
+# --- Usage Example ---
+my_list = [64, 34, 25, 12, 22, 11, 90]
+print(f"Original List: {my_list}")
+sorted_list = insertion_sort(my_list.copy())
+print(f"Insertion Sorted: {sorted_list}")
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="merge-sort"><strong>2.3.4. Merge Sort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> A "divide and conquer" algorithm, like Binary Search.
+                <ol>
+                    <li><strong>Divide:</strong> Keep splitting the list into halves until you have many lists of size 1.</li>
+                    <li><strong>Conquer:</strong> Merge the small lists back together in sorted order.</li>
+                </ol>
+            </li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n log n)</strong>. Space: <strong>O(n)</strong>. Very efficient and reliable, but it requires extra memory to create the sub-lists.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">def merge_sort(data_list):
+    # Base case: A list with 0 or 1 elements is already sorted.
+    if len(data_list) > 1:
+        # --- DIVIDE STEP ---
+        # Find the middle of the list.
+        mid = len(data_list) // 2
+        # Create the left half of the list.
+        left_half = data_list[:mid]
+        # Create the right half of the list.
+        right_half = data_list[mid:]
+
+        # Recursively call merge_sort on both halves.
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        # --- CONQUER (MERGE) STEP ---
+        # Initialize pointers for the left half (i), right half (j), and the main list (k).
+        i = j = k = 0
+
+        # Copy data to temp arrays left_half[] and right_half[]
+        while i < len(left_half) and j < len(right_half):
+            # Compare elements from the left and right halves.
+            if left_half[i] < right_half[j]:
+                # If the element in the left half is smaller, add it to the main list.
+                data_list[k] = left_half[i]
+                # Move the left half's pointer forward.
+                i += 1
+            else:
+                # If the element in the right half is smaller, add it to the main list.
+                data_list[k] = right_half[j]
+                # Move the right half's pointer forward.
+                j += 1
+            # Move the main list's pointer forward.
+            k += 1
+
+        # After the main loop, check for any remaining elements in the left half.
+        while i < len(left_half):
+            data_list[k] = left_half[i]
+            i += 1
+            k += 1
+
+        # Check for any remaining elements in the right half.
+        while j < len(right_half):
+            data_list[k] = right_half[j]
+            j += 1
+            k += 1
+            
+    return data_list
+
+# --- Usage Example ---
+my_list = [64, 34, 25, 12, 22, 11, 90]
+print(f"Original List: {my_list}")
+# merge_sort modifies the list in-place, so we pass a copy.
+sorted_list = merge_sort(my_list.copy())
+print(f"Merge Sorted: {sorted_list}")
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="quicksort"><strong>2.3.5. Quicksort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> Another “Divide and Conquer” algorithm.
+                <ol type="1">
+                    <li><strong>Pick a Pivot:</strong> Choose an element from the array as a pivot.</li>
+                    <li><strong>Partition:</strong> Reorder the array so that all elements with values less than the pivot come before the pivot, while all elements with values greater than the pivot come after it. After this partitioning, the pivot is in its final position.</li>
+                    <li><strong>Recurse:</strong> Recursively apply the above steps to the sub-array of elements with smaller values and separately to the sub-array of elements with greater values.</li>
+                </ol>
+            </li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n log n) on average</strong>, but <strong>O(n²) in the worst case</strong> (if the pivot is always the smallest or largest element). Space: O(log n) on average (due to recursion).</li>
+            <li><strong>Practical Takeaway:</strong> Often faster in practice than Merge Sort due to better cache performance and in-place partitioning. Many standard library sort functions use a hybrid approach (e.g., Introsort, which starts with Quicksort and switches to Heapsort if the recursion depth gets too large).</li>
+        </ul>
+        <h5 id="pythonic-sorting"><strong>2.3.6. Pythonic Sorting</strong></h5>
+        <p>In practice, you will almost always use Python’s built-in sorting methods, which are highly optimized (using an algorithm called Timsort).</p>
+        <pre><code class="language-python"># The Pythonic Way ---
+my_list = [64, 34, 25, 12, 22, 11, 90]
+
+# Option 1: Sort the list in-place (modifies the original list)
+my_list.sort()
+print(f"In-place sort: {my_list}")
+
+# Option 2: Create a new sorted list (leaves original unchanged)
+my_list = [64, 34, 25, 12, 22, 11, 90]
+new_sorted_list = sorted(my_list)
+print(f"New sorted list: {new_sorted_list}")
+print(f"Original is unchanged: {my_list}")
+</code></pre>
+        <p>Understanding how the underlying algorithms work is crucial for interviews and for situations where you might need a custom or specialized sort.</p>
+        <h3 id="part-3-linear-data-structures"><strong>Part 3: Linear Data Structures</strong></h3>
+        <p>Linear data structures arrange data elements sequentially, where each element is connected to its previous and next element.</p>
+        <h4 id="linked-lists"><strong>4.1. Linked Lists</strong></h4>
+        <p><strong>The Problem:</strong> Python’s built-in <code>list</code> (which is a dynamic array) is great, but inserting or deleting elements in the middle can be slow (O(n)) because it requires shifting many elements. What if you need a data structure where frequent insertions and deletions at arbitrary positions are common?</p>
+        <p><strong>The Concept:</strong> A Linked List is a sequence of <strong>nodes</strong>, where each node stores two things: 1. The actual <code>data</code> (or value). 2. A <code>pointer</code> (or reference) to the next node in the sequence. The list is managed by a <code>head</code> pointer, which points to the first node. The last node’s pointer points to <code>None</code>.</p>
+        <p><strong>Key Difference from Arrays:</strong> * <strong>Arrays:</strong> Store elements in contiguous memory locations. Access by index is O(1). Insertion/deletion in middle is O(n). * <strong>Linked Lists:</strong> Store elements scattered in memory. Each node knows where the next one is. Access by index is O(n). Insertion/deletion (if you have a reference to the node) is O(1).</p>
+        <hr />
+        <h5 id="singly-linked-list-implementation"><strong>4.1.1. Singly Linked List Implementation</strong></h5>
+        <ul>
+            <li><p><strong>Methodology:</strong> We’ll define two classes: <code>Node</code> to represent each element, and <code>LinkedList</code> to manage the collection of nodes.</p></li>
+            <li><p><strong>Code:</strong></p>
+            <pre><code class="language-python">class Node:
+    """
+    An object for storing a single node of a linked list.
+    Models two attributes: data and the link to the next node in the list.
+    """
+    def __init__(self, data):
+        # The value or data stored in the node.
+        self.data = data
+        # The reference to the next node in the sequence. It is None by default.
+        self.next = None
+
+class LinkedList:
+    """
+    Manages the collection of nodes and the head of the list.
+    """
+    def __init__(self):
+        # The head is a pointer to the very first node in the list.
+        # An empty list has its head pointing to None.
+        self.head = None
+
+    def __str__(self):
+        """Provides a user-friendly string representation of the list for printing."""
+        # Create a temporary list to hold the data of each node.
+        nodes_data = []
+        # Start traversal from the head of the list.
+        current_node = self.head
+        # Loop until we reach the end of the list (where current_node is None).
+        while current_node:
+            # Add the data of the current node to our temporary list.
+            nodes_data.append(str(current_node.data))
+            # Move to the next node in the list.
+            current_node = current_node.next
+        # Join the collected data with " -> " to visualize the list.
+        return " -> ".join(nodes_data) if nodes_data else "Empty List"
+
+    def is_empty(self):
+        """Returns True if the linked list is empty."""
+        # The list is empty if the head pointer is None.
+        return self.head is None
+
+    def append(self, data):
+        """Adds a new node with the given data to the end of the list. Time Complexity: O(n)"""
+        # Create a new Node object to hold the data.
+        new_node = Node(data)
+
+        # If the list is empty, the new node becomes the head.
+        if self.is_empty():
+            self.head = new_node
+            return # End the function here.
+
+        # If the list is not empty, we need to find the last node.
+        # Start from the head.
+        last_node = self.head
+        # Traverse the list until we find a node whose 'next' pointer is None.
+        while last_node.next:
+            last_node = last_node.next
+        
+        # Set the 'next' pointer of the last node to our new node.
+        last_node.next = new_node
+
+    def prepend(self, data):
+        """Adds a new node with the given data to the beginning of the list. Time Complexity: O(1)"""
+        # Create a new Node object.
+        new_node = Node(data)
+        # Set the new node's 'next' pointer to the current head of the list.
+        new_node.next = self.head
+        # Update the list's head to be the new node.
+        self.head = new_node
+
+    def delete_node(self, key):
+        """Deletes the first node found that contains the given key (data). Time Complexity: O(n)"""
+        # Start at the head.
+        current_node = self.head
+
+        # Case 1: The node to be deleted is the head itself.
+        if current_node and current_node.data == key:
+            # Move the head pointer to the next node.
+            self.head = current_node.next
+            # The old head is now disconnected and will be garbage collected.
+            current_node = None
+            return
+
+        # Case 2: The node is somewhere else in the list.
+        # We need to keep track of the previous node to update its 'next' pointer.
+        prev_node = None
+        # Traverse the list to find the node with the matching key.
+        while current_node and current_node.data != key:
+            # Move pointers one step forward.
+            prev_node = current_node
+            current_node = current_node.next
+
+        # If the loop finished and current_node is None, the key was not in the list.
+        if current_node is None:
+            print(f"Key '{key}' not found in the list.")
+            return
+
+        # Unlink the node from the list by pointing the previous node's 'next'
+        # to the current node's 'next'.
+        prev_node.next = current_node.next
+        # The target node is now disconnected.
+        current_node = None
+
+# --- Usage Example ---
+my_list = LinkedList()
+my_list.append("A")
+my_list.append("B")
+my_list.append("C")
+print(f"Initial list: {my_list}")
+
+my_list.prepend("START")
+print(f"After prepending: {my_list}")
+
+my_list.delete_node("B")
+print(f"After deleting 'B': {my_list}")
+</code></pre></li>
+        </ul>
+        <h5 id="doubly-linked-list"><strong>4.1.2. Doubly Linked List</strong></h5>
+        <ul>
+            <li><strong>Concept:</strong> Each node has two pointers: <code>next</code> (to the next node) and <code>prev</code> (to the previous node).</li>
+            <li><strong>Benefit:</strong> Allows traversal in both forward and backward directions. Deletion of a given node becomes much more efficient if you have a direct reference to it.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">class DoublyNode:
+    """
+    Node for a Doubly Linked List. Includes a 'prev' pointer.
+    """
+    def __init__(self, data):
+        # The value stored in the node.
+        self.data = data
+        # Reference to the next node.
+        self.next = None
+        # Reference to the previous node.
+        self.prev = None
+
+class DoublyLinkedList:
+    def __init__(self):
+        # The list is initially empty.
+        self.head = None
+
+    def __str__(self):
+        """String representation for printing."""
+        nodes_data = []
+        current_node = self.head
+        while current_node:
+            nodes_data.append(str(current_node.data))
+            current_node = current_node.next
+        return " <-> ".join(nodes_data) if nodes_data else "Empty List"
+
+    def append(self, data):
+        """Adds a new node to the end of the list. O(n)"""
+        # Create the new node. Its prev and next are None by default.
+        new_node = DoublyNode(data)
+
+        # If the list is empty, the new node is the head.
+        if self.head is None:
+            self.head = new_node
+            return
+
+        # Traverse to the end of the list.
+        last_node = self.head
+        while last_node.next:
+            last_node = last_node.next
+        
+        # Link the last node to the new node.
+        last_node.next = new_node
+        # Link the new node back to the previous last node.
+        new_node.prev = last_node
+
+    def prepend(self, data):
+        """Adds a new node to the beginning of the list. O(1)"""
+        # Create the new node.
+        new_node = DoublyNode(data)
+        # The new node's 'next' will be the current head.
+        new_node.next = self.head
+
+        # If the list is not empty...
+        if self.head is not None:
+            # ...the current head's 'prev' must point to the new node.
+            self.head.prev = new_node
+        
+        # The new node is now the head of the list.
+        self.head = new_node
+
+    def delete_node(self, key):
+        """Deletes a node with the given key."""
+        # Start at the head.
+        current_node = self.head
+
+        # Traverse the list to find the node to delete.
+        while current_node and current_node.data != key:
+            current_node = current_node.next
+
+        # If the node was not found, do nothing.
+        if current_node is None:
+            print(f"Key '{key}' not found.")
+            return
+
+        # --- Re-linking logic ---
+        # If the node to delete is not the head...
+        if current_node.prev is not None:
+            # ...the previous node's 'next' should skip the current node.
+            current_node.prev.next = current_node.next
+        else:
+            # Otherwise, we are deleting the head, so update the head pointer.
+            self.head = current_node.next
+
+        # If the node to delete is not the last node...
+        if current_node.next is not None:
+            # ...the next node's 'prev' should skip the current node.
+            current_node.next.prev = current_node.prev
+
+# --- Usage Example ---
+dll = DoublyLinkedList()
+dll.append(10)
+dll.append(20)
+dll.append(30)
+print(f"DLL after appending: {dll}")
+dll.prepend(5)
+print(f"DLL after prepending: {dll}")
+dll.delete_node(20)
+print(f"DLL after deleting 20: {dll}")
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="circular-linked-list"><strong>4.1.3. Circular Linked List</strong></h5>
+        <ul>
+            <li><strong>Concept:</strong> The last node’s <code>next</code> pointer points back to the <code>head</code> node, forming a circle.</li>
+            <li><strong>Benefit:</strong> You can traverse the entire list starting from any node. Useful for applications like round-robin scheduling or continuous loops.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">class CircularLinkedList:
+    def __init__(self):
+        # The list is initially empty.
+        self.head = None
+
+    def append(self, data):
+        """Adds a new node. Can be O(n) or O(1) depending on implementation."""
+        # Create the new node.
+        new_node = Node(data)
+        # If the list is empty, the new node points to itself.
+        if self.head is None:
+            self.head = new_node
+            new_node.next = self.head
+            return
+
+        # Start at the head to find the last node.
+        last_node = self.head
+        # Traverse until the 'next' pointer points back to the head.
+        while last_node.next != self.head:
+            last_node = last_node.next
+        
+        # Link the last node to the new node.
+        last_node.next = new_node
+        # Link the new node back to the head to complete the circle.
+        new_node.next = self.head
+
+    def traverse(self):
+        """Traverses and prints the list, stopping after one full circle."""
+        # If the list is empty, there's nothing to print.
+        if self.head is None:
+            print("Empty List")
+            return
+
+        # Start at the head.
+        current_node = self.head
+        # Use a do-while loop pattern to ensure the head is printed at least once.
+        while True:
+            # Print the current node's data.
+            print(current_node.data, end=" -> ")
+            # Move to the next node.
+            current_node = current_node.next
+            # If we have returned to the head, we have completed a full circle.
+            if current_node == self.head:
+                break
+        print("(Head)")
+
+# --- Usage Example ---
+cll = CircularLinkedList()
+cll.append("C")
+cll.append("D")
+cll.append("E")
+cll.traverse() # Output: C -> D -> E -> (Head)
+</code></pre>
+            </li>
+        </ul>
+        <h5 id="application-polynomial-handling"><strong>4.1.4. Application: Polynomial Handling</strong></h5>
+        <ul>
+            <li><strong>The Problem:</strong> Representing and manipulating polynomials (e.g., <code>3x^2 + 2x^1 + 5</code>) where terms might be added, removed, or coefficients changed. An array might be inefficient if many terms are zero or if the exponents are very large and sparse.</li>
+            <li><strong>Methodology:</strong> A linked list can represent a polynomial where each node stores a <code>coefficient</code> and an <code>exponent</code>. The nodes are typically kept sorted by their exponent in descending order.</li>
+            <li><strong>Example:</strong> The polynomial <code>5x^3 + 2x^1 - 7</code> could be represented as: <code>Node(coeff=5, exp=3) -> Node(coeff=2, exp=1) -> Node(coeff=-7, exp=0) -> None</code></li>
+            <li><strong>Benefits:</strong> Efficient for adding/removing terms (nodes) without shifting, and for polynomials with sparse terms (many zero coefficients).</li>
+        </ul>
+<h4 id="stacks"><strong>4.2. Stacks</strong></h4>
+        <p><strong>The Problem:</strong> You need a data structure where the last item added is the first one to be removed. Think of a stack of plates – you always take the top one. Common applications include undo/redo functionality, managing function calls (the call stack), or parsing expressions.</p>
+        <p><strong>The Concept:</strong> A Stack is a <strong>Last-In, First-Out (LIFO)</strong> data structure.</p>
+        <ul>
+            <li><strong><code>push</code>:</strong> Adds an item to the top of the stack.</li>
+            <li><strong><code>pop</code>:</strong> Removes and returns the item from the top of the stack.</li>
+            <li><strong><code>peek</code> (or <code>top</code>):</strong> Returns the item at the top without removing it.</li>
+            <li><strong><code>is_empty</code>:</strong> Checks if the stack contains any items.</li>
+        </ul>
+        <p><strong>Practical Implementation (using Python's <code>list</code>):</strong></p>
+        <pre><code class="language-python">class Stack:
+    def __init__(self):
+        # We use a standard Python list as the underlying storage.
+        # The end of the list will represent the top of our stack.
+        self._items = []
+
+    def is_empty(self):
+        """Checks if the stack is empty. O(1)"""
+        # The stack is empty if the internal list has no items.
+        return not self._items
+
+    def push(self, item):
+        """Adds an item to the top of the stack. O(1)"""
+        # list.append() is an efficient O(1) operation on average.
+        self._items.append(item)
+
+    def pop(self):
+        """Removes and returns the item from the top of the stack. O(1)"""
+        # Check if the stack is empty to avoid errors.
+        if self.is_empty():
+            raise IndexError("pop from empty stack")
+        # list.pop() without an index removes from the end, which is O(1).
+        return self._items.pop()
+
+    def peek(self):
+        """Returns the item at the top without removing it. O(1)"""
+        # Check if the stack is empty.
+        if self.is_empty():
+            raise IndexError("peek from empty stack")
+        # The top item is the last element in the list.
+        return self._items[-1]
+
+    def size(self):
+        """Returns the number of items in the stack. O(1)"""
+        return len(self._items)
+
+    def __str__(self):
+        """String representation for printing."""
+        return f"Stack: {self._items}"
+
+# --- Usage Example ---
+my_stack = Stack()
+my_stack.push("Task 1")
+my_stack.push("Task 2")
+my_stack.push("Task 3")
+print(my_stack)
+print(f"Top item is: {my_stack.peek()}")
+print(f"Popped item: {my_stack.pop()}")
+print(f"Stack after pop: {my_stack}")
+</code></pre>
+        <h5 id="application-infix-to-postfix"><strong>4.2.1. Application: Infix to Postfix Conversion &amp; Evaluation</strong></h5>
+        <ul>
+            <li><strong>The Problem:</strong> Mathematical expressions can be written in different notations.
+                <ul>
+                    <li><strong>Infix:</strong> <code>A + B</code> (operator between operands, human-readable)</li>
+                    <li><strong>Postfix:</strong> <code>A B +</code> (operator after operands, computer-friendly, no parentheses needed)</li>
+                </ul>
+            </li>
+            <li><strong>Methodology (Conversion):</strong> Use a stack to temporarily hold operators and parentheses.
+                <ol>
+                    <li>Scan the infix expression from left to right.</li>
+                    <li>If an operand, add it to the postfix expression.</li>
+                    <li>If an operator, push it onto the stack, but first pop operators with higher or equal precedence from the stack to the postfix expression.</li>
+                    <li>Handle parentheses: push <code>(</code> onto stack, pop until <code>(</code> for <code>)</code>.</li>
+                </ol>
+            </li>
+            <li><strong>Methodology (Evaluation):</strong> Use a stack to hold operands.
+                <ol>
+                    <li>Scan the postfix expression from left to right.</li>
+                    <li>If an operand, push it onto the stack.</li>
+                    <li>If an operator, pop two operands from the stack, perform the operation, and push the result back onto the stack.</li>
+                    <li>The final result is the only item left on the stack.</li>
+                </ol>
+            </li>
+        </ul>
+        <hr />
+        <h4 id="queues"><strong>4.3. Queues</strong></h4>
+        <p><strong>The Problem:</strong> You need a data structure where the first item added is the first one to be removed. Think of a line at a grocery store – the first person in line is the first to be served. Common applications include print job scheduling, CPU task scheduling, or breadth-first search in graphs.</p>
+        <p><strong>The Concept:</strong> A Queue is a <strong>First-In, First-Out (FIFO)</strong> data structure.</p>
+        <ul>
+            <li><strong><code>enqueue</code>:</strong> Adds an item to the rear (back) of the queue.</li>
+            <li><strong><code>dequeue</code>:</b> Removes and returns the item from the front of the queue.</li>
+            <li><strong><code>front</code> (or <code>peek</code>):</strong> Returns the item at the front without removing it.</li>
+        </ul>
+        <p><strong>Practical Implementation (using <code>collections.deque</code>):</strong></p>
+        <pre><code class="language-python">from collections import deque
+
+class Queue:
+    def __init__(self):
+        # Use collections.deque for efficient appends and pops from both ends.
+        # Using a regular list for a queue is inefficient because list.pop(0) is O(n).
+        # deque.popleft() is O(1).
+        self._items = deque()
+
+    def is_empty(self):
+        """Checks if the queue is empty. O(1)"""
+        return not self._items
+
+    def enqueue(self, item):
+        """Adds an item to the rear of the queue. O(1)"""
+        # Appending to a deque is an O(1) operation.
+        self._items.append(item)
+
+    def dequeue(self):
+        """Removes and returns the item from the front of the queue. O(1)"""
+        if self.is_empty():
+            raise IndexError("dequeue from empty queue")
+        # popleft() is an O(1) operation, making deque ideal for queues.
+        return self._items.popleft()
+
+    def front(self):
+        """Returns the item at the front without removing it. O(1)"""
+        if self.is_empty():
+            raise IndexError("front from empty queue")
+        # Accessing the first item is O(1).
+        return self._items[0]
+
+    def size(self):
+        """Returns the number of items in the queue. O(1)"""
+        return len(self._items)
+
+    def __str__(self):
+        """String representation for printing."""
+        return f"Queue (front to rear): {list(self._items)}"
+
+# --- Usage Example ---
+my_queue = Queue()
+my_queue.enqueue("Job 1")
+my_queue.enqueue("Job 2")
+my_queue.enqueue("Job 3")
+print(my_queue)
+print(f"Front of queue: {my_queue.front()}")
+print(f"Processing: {my_queue.dequeue()}")
+print(f"Queue after dequeue: {my_queue}")
+</code></pre>
+        <h5 id="circular-queue"><strong>4.3.1. Circular Queue</strong></h5>
+        <ul>
+            <li><strong>The Problem:</strong> When implementing a queue using a fixed-size array, <code>dequeue</code> operations can leave empty spaces at the front. A circular queue reuses these spaces by wrapping around to the beginning of the array.</li>
+            <li><strong>Concept:</strong> A queue implemented with a fixed-size array where the <code>front</code> and <code>rear</code> pointers move in a circular fashion. When the <code>rear</code> reaches the end of the array, it wraps around to the beginning if there's space.</li>
+            <li><strong>Benefits:</strong> Efficient use of memory (no shifting elements), fixed capacity. Useful in systems with limited memory or when you need a fixed-size buffer, like in operating systems or network protocols.</li>
+        </ul>
+        <h3 id="part-5-non-linear-data-structures"><strong>Part 5: Non-Linear Data Structures</strong></h3>
+        <h4 id="trees"><strong>5.1. Trees</strong></h4>
+        <p><strong>The Concept:</strong> A data structure consisting of nodes connected by edges, representing hierarchical data.</p>
+        <h5 id="binary-search-trees-bst"><strong>5.1.1. Binary Search Trees (BST)</strong></h5>
+        <p>A binary tree where for any given node, all values in its <strong>left</strong> subtree are <strong>less than</strong> the node's value, and all values in its <strong>right</strong> subtree are <strong>greater than</strong> the node's value. This allows for O(log n) search, insert, and delete on average.</p>
+        <p><strong>Practical Implementation:</strong></p>
+        <pre><code class="language-python">class Node:
+    """A node in a Binary Search Tree."""
+    def __init__(self, key):
+        # The key/value of the node.
+        self.key = key
+        # Pointer to the left child node.
+        self.left = None
+        # Pointer to the right child node.
+        self.right = None
+
+class BinarySearchTree:
+    """A class representing the Binary Search Tree itself."""
+    def __init__(self):
+        # The root is the top-most node of the tree. Initially, the tree is empty.
+        self.root = None
+
+    # --- INSERTION ---
+    def insert(self, key):
+        """Public method to insert a new key into the tree."""
+        # If the tree is empty, the new key becomes the root.
+        if self.root is None:
+            self.root = Node(key)
+        # Otherwise, call the private recursive helper to find the right spot.
+        else:
+            self._insert_recursive(self.root, key)
+
+    def _insert_recursive(self, current_node, key):
+        """Private helper to recursively find the insertion point."""
+        # If the new key is less than the current node's key, go left.
+        if key < current_node.key:
+            # If there is no left child, insert the new node here.
+            if current_node.left is None:
+                current_node.left = Node(key)
+            # Otherwise, continue searching down the left subtree.
+            else:
+                self._insert_recursive(current_node.left, key)
+        # If the new key is greater than the current node's key, go right.
+        elif key > current_node.key:
+            # If there is no right child, insert the new node here.
+            if current_node.right is None:
+                current_node.right = Node(key)
+            # Otherwise, continue searching down the right subtree.
+            else:
+                self._insert_recursive(current_node.right, key)
+        # If key is equal to current_node.key, do nothing (no duplicates allowed).
+
+    # --- SEARCHING ---
+    def search(self, key):
+        """Public method to search for a key. Returns True if found, False otherwise."""
+        return self._search_recursive(self.root, key)
+
+    def _search_recursive(self, current_node, key):
+        """Private helper to recursively search for a key."""
+        # Base case 1: The node doesn't exist (we've hit the end of a branch).
+        if current_node is None:
+            return False
+        # Base case 2: We found the key.
+        if current_node.key == key:
+            return True
+        # If the key we're looking for is smaller, search the left subtree.
+        elif key < current_node.key:
+            return self._search_recursive(current_node.left, key)
+        # If the key we're looking for is larger, search the right subtree.
+        else:
+            return self._search_recursive(current_node.right, key)
+
+    # --- DELETION ---
+    def delete(self, key):
+        """Public method to delete a key from the tree."""
+        # This calls the recursive helper to find and delete the node.
+        self.root = self._delete_recursive(self.root, key)
+
+    def _delete_recursive(self, current_node, key):
+        """Private helper to recursively find and delete a node."""
+        # Base case: If the tree/subtree is empty, return None.
+        if current_node is None:
+            return current_node
+
+        # Find the node to delete by traversing the tree.
+        if key < current_node.key:
+            current_node.left = self._delete_recursive(current_node.left, key)
+        elif key > current_node.key:
+            current_node.right = self._delete_recursive(current_node.right, key)
+        # If the key matches, we've found the node to delete.
+        else:
+            # Case 1: Node has no children or only one child.
+            if current_node.left is None:
+                # If no left child, replace the node with its right child.
+                return current_node.right
+            elif current_node.right is None:
+                # If no right child, replace the node with its left child.
+                return current_node.left
+
+            # Case 2: Node has two children. This is the complex case.
+            # We need to find the in-order successor (the smallest node in the right subtree).
+            temp = self._get_min_value_node(current_node.right)
+            # Copy the in-order successor's key to this node.
+            current_node.key = temp.key
+            # Delete the in-order successor from the right subtree.
+            current_node.right = self._delete_recursive(current_node.right, temp.key)
+            
+        return current_node
+
+    def _get_min_value_node(self, current_node):
+        """Helper to find the node with the minimum key in a subtree."""
+        # The smallest key is always the left-most node.
+        while current_node.left is not None:
+            current_node = current_node.left
+        return current_node
+
+# --- Usage Example ---
+bst = BinarySearchTree()
+keys = [50, 30, 70, 20, 40, 60, 80]
+for key in keys:
+    bst.insert(key)
+
+print(f"Is 40 in the tree? {bst.search(40)}") # True
+print(f"Is 99 in the tree? {bst.search(99)}") # False
+
+bst.delete(20) # Delete a leaf node
+bst.delete(70) # Delete a node with two children
+print(f"Is 20 in the tree after deletion? {bst.search(20)}") # False
+print(f"Is 70 in the tree after deletion? {bst.search(70)}") # False
+</code></pre>
+        <h5 id="tree-traversal-methods"><strong>5.1.2. Tree Traversal Methods</strong></h5>
+        <p><strong>The Problem:</strong> How do you visit and process every node in a tree in a systematic order? There are two main approaches: Depth-First Search (DFS) and Breadth-First Search (BFS).</p>
+        <h6>Depth-First Search (DFS)</h6>
+        <p>DFS goes as deep as possible down one branch before exploring others. It's often implemented using recursion, which naturally uses a stack (the call stack).</p>
+        <ul>
+            <li><strong>In-Order Traversal (Left, Root, Right):</strong>
+                <ul>
+                    <li><strong>Use Case:</strong> For a BST, this visits the nodes in <strong>sorted ascending order</strong>.</li>
+                    <li><strong>Code:</strong>
+<pre><code class="language-python">def in_order_traversal(node):
+    # This function would typically be a method of the BST class.
+    # It takes a starting node (usually the root) to begin traversal.
+    
+    # Base case: If the current node is None, we've reached the end of a branch.
+    if node is not None:
+        # 1. Go left: Recursively call the function on the left child.
+        in_order_traversal(node.left)
+        
+        # 2. Visit root: Process the current node (in this case, print its key).
+        print(node.key, end=" ")
+        
+        # 3. Go right: Recursively call the function on the right child.
+        in_order_traversal(node.right)
+
+# --- Usage with the BST from the previous example ---
+# print("In-Order Traversal:", end=" ")
+# in_order_traversal(bst.root) # Expected output: 20 30 40 50 60 70 80
+</code></pre>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Pre-Order Traversal (Root, Left, Right):</strong>
+                <ul>
+                    <li><strong>Use Case:</strong> Useful for creating a copy of a tree or for getting a prefix expression from an expression tree.</li>
+                    <li><strong>Code:</strong>
+<pre><code class="language-python">def pre_order_traversal(node):
+    # Base case: If the current node is None, do nothing.
+    if node is not None:
+        # 1. Visit root: Process the current node first.
+        print(node.key, end=" ")
+        
+        # 2. Go left: Recursively traverse the left subtree.
+        pre_order_traversal(node.left)
+        
+        # 3. Go right: Recursively traverse the right subtree.
+        pre_order_traversal(node.right)
+
+# --- Usage ---
+# print("\nPre-Order Traversal:", end=" ")
+# pre_order_traversal(bst.root) # Expected output: 50 30 20 40 70 60 80
+</code></pre>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Post-Order Traversal (Left, Right, Root):</strong>
+                <ul>
+                    <li><strong>Use Case:</strong> Useful for deleting all nodes in a tree, as you delete the children before deleting the parent.</li>
+                    <li><strong>Code:</strong>
+<pre><code class="language-python">def post_order_traversal(node):
+    # Base case: If the current node is None, do nothing.
+    if node is not None:
+        # 1. Go left: Recursively traverse the left subtree.
+        post_order_traversal(node.left)
+        
+        # 2. Go right: Recursively traverse the right subtree.
+        post_order_traversal(node.right)
+        
+        # 3. Visit root: Process the current node last.
+        print(node.key, end=" ")
+
+# --- Usage ---
+# print("\nPost-Order Traversal:", end=" ")
+# post_order_traversal(bst.root) # Expected output: 20 40 30 60 80 70 50
+</code></pre>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h6>Breadth-First Search (BFS) / Level-Order Traversal</h6>
+        <ul>
+            <li><strong>Methodology:</strong> Explores the tree level by level, from top to bottom, left to right. It uses a <strong>Queue</strong> to manage which node to visit next.</li>
+            <li><strong>Use Case:</strong> Finding the shortest path between two nodes in an unweighted tree or graph.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">from collections import deque
+
+def level_order_traversal(root):
+    # If the tree is empty (root is None), there's nothing to traverse.
+    if root is None:
+        return
+
+    # Create a queue for BFS. Add the root node to start.
+    nodes_to_visit = deque([root])
+
+    # Loop as long as there are nodes in our queue to visit.
+    while nodes_to_visit:
+        # Dequeue the next node to visit (the one that was added earliest).
+        current_node = nodes_to_visit.popleft()
+        
+        # Process the current node (in this case, print its key).
+        print(current_node.key, end=" ")
+        
+        # Enqueue the left child if it exists.
+        if current_node.left is not None:
+            nodes_to_visit.append(current_node.left)
+            
+        # Enqueue the right child if it exists.
+        if current_node.right is not None:
+            nodes_to_visit.append(current_node.right)
+
+# --- Usage ---
+# print("\nLevel-Order Traversal:", end=" ")
+# level_order_traversal(bst.root) # Expected output: 50 30 70 20 40 60 80
+</code></pre>
+            </li>
+        </ul>
+        <h4 id="heaps"><strong>5.3. Heaps</strong></h4>
+        <p><strong>The Problem:</strong> You need a data structure to quickly find the minimum or maximum element in a collection. This is common in "priority queues," where you need to process the highest-priority item first (e.g., an ER waiting room).</p>
+        <p><strong>The Concept:</strong> A Heap is a special tree-based data structure that satisfies the <strong>Heap Property</strong>. It's typically implemented as a list or array but visualized as a tree.</p>
+        <ul>
+            <li><strong>Min-Heap:</strong> The value of any parent node is less than or equal to the values of its children. The <strong>root is always the minimum value</strong>.</li>
+            <li><strong>Max-Heap:</strong> The value of any parent node is greater than or equal to the values of its children. The <strong>root is always the maximum value</strong>.</li>
+        </ul>
+        <p>Heaps are also <strong>complete binary trees</strong>, meaning all levels are completely filled except possibly the last, which is filled from left to right.</p>
+        
+        <h5 id="heaps-pythonic">The Pythonic Way: Using `heapq`</h5>
+        <p>For most practical purposes, you should use Python's built-in `heapq` module. It provides an efficient implementation of a **min-heap** using a standard list.</p>
+        <pre><code class="language-python">import heapq
+
+# --- Create a min-heap ---
+# Start with a regular list of tasks (priority, task_name)
+tasks = [(5, "Write report"), (2, "Answer emails"), (9, "Plan project"), (1, "Call client")]
+print(f"Original list: {tasks}")
+
+# To turn a list into a heap in-place, use heapify(). This is an O(n) operation.
+heapq.heapify(tasks)
+print(f"Heapified list (min-heap): {tasks}")
+
+# --- Add an item ---
+# Use heappush() to add a new item while maintaining the heap property. O(log n).
+new_task = (3, "Review code")
+heapq.heappush(tasks, new_task)
+print(f"Heap after pushing {new_task}: {tasks}")
+
+# --- Get the smallest item ---
+# The smallest item is always at index 0. Accessing it is O(1).
+print(f"Highest priority task (peek): {tasks[0]}")
+
+# --- Remove and return the smallest item ---
+# Use heappop() to remove the smallest item and maintain the heap property. O(log n).
+highest_priority_task = heapq.heappop(tasks)
+print(f"Processing (popped): {highest_priority_task}")
+print(f"Heap after pop: {tasks}")
+</code></pre>
+
+        <h5 id="heaps-from-scratch">How it Works: Building a Min-Heap from Scratch</h5>
+        <p>To understand the underlying logic, here is a simple `MinHeap` class. It demonstrates the core `_sift_up` and `_sift_down` operations.</p>
+        <pre><code class="language-python">class MinHeap:
+    def __init__(self):
+        # The heap is stored in a list. Index 0 is the root.
+        self.heap = []
+
+    # --- Helper methods to get parent/child indices ---
+    def _get_parent_index(self, i): return (i - 1) // 2
+    def _get_left_child_index(self, i): return 2 * i + 1
+    def _get_right_child_index(self, i): return 2 * i + 2
+
+    def _has_parent(self, i): return self._get_parent_index(i) >= 0
+    def _has_left_child(self, i): return self._get_left_child_index(i) < len(self.heap)
+    def _has_right_child(self, i): return self._get_right_child_index(i) < len(self.heap)
+
+    def _swap(self, i, j):
+        """Swaps two elements in the heap list."""
+        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+    def _sift_up(self):
+        """
+        Moves the last element up the tree to its correct position
+        to maintain the heap property after an insertion.
+        """
+        # Start at the last element.
+        index = len(self.heap) - 1
+        # While the node has a parent and is smaller than its parent...
+        while self._has_parent(index) and self.heap[index] < self.heap[self._get_parent_index(index)]:
+            # ...swap the node with its parent.
+            parent_index = self._get_parent_index(index)
+            self._swap(index, parent_index)
+            # Move up to the parent's index to continue sifting.
+            index = parent_index
+
+    def _sift_down(self):
+        """
+        Moves the root element down the tree to its correct position
+        to maintain the heap property after an extraction.
+        """
+        # Start at the root.
+        index = 0
+        # Loop as long as there is at least a left child.
+        while self._has_left_child(index):
+            # Assume the left child is the smaller one.
+            smaller_child_index = self._get_left_child_index(index)
+            # If a right child exists and is even smaller, it becomes the target to swap with.
+            if self._has_right_child(index) and self.heap[self._get_right_child_index(index)] < self.heap[smaller_child_index]:
+                smaller_child_index = self._get_right_child_index(index)
+
+            # If the current node is smaller than its smallest child, it's in the right place.
+            if self.heap[index] < self.heap[smaller_child_index]:
+                break
+            else:
+                # Otherwise, swap it with its smallest child.
+                self._swap(index, smaller_child_index)
+            
+            # Move down to the child's index to continue sifting.
+            index = smaller_child_index
+
+    def insert(self, key):
+        """Adds a new key to the heap. O(log n)"""
+        # Add the new element to the end of the list.
+        self.heap.append(key)
+        # Sift it up to its correct position.
+        self._sift_up()
+
+    def extract_min(self):
+        """Removes and returns the minimum element (the root). O(log n)"""
+        if not self.heap:
+            raise IndexError("extract_min from empty heap")
+        
+        # The minimum element is always the root.
+        min_element = self.heap[0]
+        # Move the last element to the root.
+        self.heap[0] = self.heap.pop()
+        # Sift the new root down to its correct position.
+        self._sift_down()
+        
+        return min_element
+
+# --- Usage Example ---
+heap = MinHeap()
+heap.insert(5)
+heap.insert(2)
+heap.insert(9)
+heap.insert(1)
+print(f"Heap from scratch: {heap.heap}")
+print(f"Extracted min: {heap.extract_min()}")
+print(f"Heap after extraction: {heap.heap}")
+</code></pre>
+        <h5 id="heapsort"><strong>5.3.1. Application: Heapsort</strong></h5>
+        <ul>
+            <li><strong>Methodology:</strong> A clever sorting algorithm using a heap.
+                <ol>
+                    <li>Build a Max-Heap from the list. The largest element is now at the root.</li>
+                    <li>Swap the root element with the last element in the list.</li>
+                    <li>The largest element is now sorted at the end. "Remove" it from the heap (by reducing the heap's size counter) and "heapify" the new root to restore the max-heap property.</li>
+                    <li>Repeat until the heap is empty.</li>
+                </ol>
+            </li>
+            <li><strong>Analysis:</strong> Time: <strong>O(n log n)</strong>. Space: O(1) (in-place).</li>
+        </ul>
+        <h4 id="hashing"><strong>5.4. Hashing</strong></h4>
+        <p><strong>The Problem:</strong> We need lookups to be even faster than a BST's O(log n). Can we achieve O(1) average time for search, insert, and delete?</p>
+        <p><strong>The Concept:</strong> Hashing is the core idea behind Python's <strong>dictionaries (<code>dict</code>) and sets (<code>set</code>)</strong>. It works in two steps:</p>
+        <ol>
+            <li><strong>Hash Function:</strong> A function that takes your data (the "key") and computes a seemingly random integer from it. This integer is the "hash code". A good hash function always produces the same hash code for the same key.</li>
+            <li><strong>Hash Table:</strong> A simple array. The hash code is mapped to an index in this array. The index produced by the hash function tells us where in the array to store the corresponding value.</li>
+        </ol>
+        <p><strong>Hash Collisions:</strong></p>
+        <ul>
+            <li><strong>The Problem:</strong> What if <code>hash('name')</code> and <code>hash('age')</code> both produce an index of <code>42</code>? This is a <strong>collision</strong>.</li>
+            <li><strong>Collision Resolution:</strong>
+                <ul>
+                    <li><strong>Separate Chaining (most common):</strong> Instead of storing a single value at index <code>42</code>, the hash table stores a pointer to a small linked list. Both the <code>('name', 'Alice')</code> pair and the <code>('age', 30)</code> pair would be stored in this linked list. When searching, Python hashes to the index and then does a quick linear search through the small linked list. As long as collisions are rare, this is still extremely fast.</li>
+                    <li><strong>Open Addressing:</strong> If index <code>42</code> is taken, the algorithm just probes for the next available slot (e.g., 43, 44, ...).</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Practical Implementation (Python's <code>dict</code>):</strong></p>
+        <pre><code class="language-python"># In Python, you don't need to implement this yourself. You just use a dictionary!
+# The underlying C implementation is highly optimized.
+
+# 1. Create a dictionary (hash map).
+# This creates an underlying hash table in memory.
+user_profile = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+print(f"Initial dictionary: {user_profile}")
+
+# 2. Add or update an item. This is O(1) on average.
+# Python hashes the key "city" to find an index and stores "New York" there.
+user_profile["city"] = "New York"
+print(f"After adding a city: {user_profile}")
+
+# 3. Access an item. This is also O(1) on average.
+# Python hashes the key "age" to instantly find the index where 30 is stored.
+user_age = user_profile["age"]
+print(f"User's age is: {user_age}")
+
+# 4. Check for existence. Also O(1) on average.
+# It hashes "email" to see if a value exists at the corresponding index.
+if "email" in user_profile:
+    print("User has an email address.")
+
+# 5. Delete an item. Also O(1) on average.
+# It hashes "age" to find the item and remove it.
+del user_profile["age"]
+print(f"After deleting age: {user_profile}")
+</code></pre>
+        <h4 id="graphs"><strong>5.5. Graphs</strong></h4>
+        <p><strong>The Problem:</strong> How do you represent data with complex, many-to-many relationships? Think of a social network (users are connected to many friends), a road map (cities are connected by roads), or the internet (web pages are connected by links).</p>
+        <p><strong>The Concept:</strong> A Graph consists of:</p>
+        <ul>
+            <li><strong>Vertices (or Nodes):</strong> The items or entities in the graph.</li>
+            <li><strong>Edges:</strong> The connections between vertices.</li>
+            <li><strong>Directed vs. Undirected:</strong> In a social network, friendship is usually mutual (undirected). On Twitter, following is one-way (directed).</li>
+            <li><strong>Weighted vs. Unweighted:</strong> On a road map, edges have weights (the distance). On a simple social network, an edge might be unweighted (you're either friends or not).</li>
+        </ul>
+        <h5 id="graph-representation"><strong>5.5.1. Graph Representation</strong></h5>
+        <p><strong>Adjacency List (most common):</strong></p>
+        <ul>
+            <li><strong>Methodology:</strong> A dictionary where each key is a vertex, and its value is a list of the vertices it's connected to. Excellent for sparse graphs (graphs with relatively few edges).</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python"># This dictionary represents an undirected graph.
+# For example, 'A' is connected to 'B' and 'C', and 'B' is also connected back to 'A'.
+social_network = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+print(f"Adjacency List for the graph:\n{social_network}")
+</code></pre>
+            </li>
+        </ul>
+        <p><strong>Adjacency Matrix:</strong></p>
+        <ul>
+            <li><strong>Methodology:</strong> An N x N matrix (where N is the number of vertices) where <code>matrix[i][j] = 1</code> if there's an edge from vertex <code>i</code> to <code>j</code>, and 0 otherwise. Good for dense graphs (many connections) but wastes a lot of space for sparse graphs.</li>
+        </ul>
+        <h5 id="graph-traversal"><strong>5.5.2. Graph Traversal</strong></h5>
+        <p>How do you visit every vertex in a graph systematically, starting from a given vertex?</p>
+        <h6>Breadth-First Search (BFS)</h6>
+        <ul>
+            <li><strong>Methodology:</strong> Explores the graph "layer by layer." It visits the starting node, then all of its direct neighbors, then all of their neighbors, and so on. It uses a <strong>Queue</strong>.</li>
+            <li><strong>Use Case:</strong> Finding the <strong>shortest path</strong> in an unweighted graph.</li>
+            <li><strong>Code:</strong>
+<pre><code class="language-python">from collections import deque
+
+def bfs(graph, start_node):
+    # A set to keep track of all nodes that have already been visited.
+    # This is crucial to prevent infinite loops in graphs with cycles.
+    visited = set()
+    
+    # A queue to keep track of nodes to visit next. Start with the given start_node.
+    queue = deque([start_node])
+    # Add the start_node to the visited set so we don't visit it again.
+    visited.add(start_node)
+    
+    print("BFS Traversal:", end=" ")
+    
+    # Loop as long as there are nodes in the queue to process.
+    while queue:
+        # Dequeue the node at the front of the queue.
+        vertex = queue.popleft()
+        # Process the node (in this case, just print it).
+        print(vertex, end=" ")
+        
+        # Get all neighbors of the current vertex from the adjacency list.
+        for neighbor in graph[vertex]:
+            # If a neighbor has not been visited yet...
+            if neighbor not in visited:
+                # ...add it to the visited set.
+                visited.add(neighbor)
+                # ...and enqueue it to be visited later.
+                queue.append(neighbor)
+
+# --- Usage ---
+# bfs(social_network, 'A') # Expected output: A B C D E F (order of neighbors may vary)
+</code></pre>
+            </li>
+        </ul>
+        <h6>Depth-First Search (DFS)</h6>
+        <ul>
+            <li><strong>Methodology:</strong> Explores as far as possible down one path before backtracking. It uses a <strong>Stack</strong> (or recursion, which uses the call stack implicitly).</li>
+            <li><strong>Use Case:</strong> Detecting cycles in a graph, "pathfinding" in a maze, or topological sorting.</li>
+            <li><strong>Code (Recursive):</strong>
+<pre><code class="language-python">def dfs(graph, start_node, visited=None):
+    # The 'visited' set is used to keep track of visited nodes across recursive calls.
+    # It's initialized only on the first call.
+    if visited is None:
+        visited = set()
+        print("DFS Traversal:", end=" ")
+
+    # Add the current node to the visited set.
+    visited.add(start_node)
+    # Process the node (in this case, print it).
+    print(start_node, end=" ")
+    
+    # Explore each neighbor of the current node.
+    for neighbor in graph[start_node]:
+        # If the neighbor has not been visited yet...
+        if neighbor not in visited:
+            # ...recursively call dfs on that neighbor.
+            dfs(graph, neighbor, visited)
+
+# --- Usage ---
+# dfs(social_network, 'A') # Expected output could be: A B D E F C (order can vary)
+</code></pre>
+            </li>
+        </ul>
+        <h3 id="part-6-advanced-topics"><strong>Part 6: Advanced Topics</strong></h3>
+        <h4 id="disjoint-sets-union-find-data-structure"><strong>6.1. Disjoint Sets (Union-Find)</strong></h4>
+        <p><strong>The Problem:</strong> Imagine you have a collection of elements, and you need to efficiently determine if two elements belong to the same group (or "set") and to merge two groups together. This is common in problems like finding connected components in a graph or in Kruskal's algorithm for Minimum Spanning Trees.</p>
+        <p><strong>The Concept:</strong> A Disjoint Set Union (DSU) data structure manages a collection of elements partitioned into a number of disjoint (non-overlapping) sets. It supports two primary operations:</p>
+        <ul>
+            <li><strong><code>find(element)</code>:</strong> Determines which set an element belongs to. It returns a "representative" (usually the root) of that set.</li>
+            <li><strong><code>union(element1, element2)</code>:</strong> Merges the sets containing <code>element1</code> and <code>element2</code> into a single set.</li>
+        </ul>
+        <p>With optimizations, these operations are nearly constant time, making DSU incredibly efficient.</p>
+        <pre><code class="language-python">class DisjointSetUnion:
+    def __init__(self, n):
+        # parent[i] stores the parent of element i.
+        # Initially, every element is its own parent (n disjoint sets).
+        self.parent = list(range(n))
+        # rank[i] stores the height/rank of the tree rooted at i.
+        # Used for the "union by rank" optimization.
+        self.rank = [0] * n
+
+    def find(self, i):
+        """
+        Finds the representative (root) of the set containing element i.
+        Applies path compression for optimization.
+        """
+        # If i is the parent of itself, then it is the representative.
+        if self.parent[i] == i:
+            return i
+        
+        # Recursively find the root of the set.
+        # Path Compression: Set the parent of i directly to the root.
+        # This flattens the tree, making future finds faster.
+        self.parent[i] = self.find(self.parent[i])
+        return self.parent[i]
+
+    def union(self, i, j):
+        """
+        Unites the sets that contain elements i and j.
+        Applies union by rank for optimization.
+        """
+        # Find the representatives (roots) of the sets for i and j.
+        root_i = self.find(i)
+        root_j = self.find(j)
+
+        # If they are not already in the same set...
+        if root_i != root_j:
+            # Union by Rank: Attach the smaller rank tree under the root of the higher rank tree.
+            if self.rank[root_i] < self.rank[root_j]:
+                # If rank of i's tree is less than j's, make j the parent of i.
+                self.parent[root_i] = root_j
+            elif self.rank[root_i] > self.rank[root_j]:
+                # If rank of j's tree is less than i's, make i the parent of j.
+                self.parent[root_j] = root_i
+            else:
+                # If ranks are the same, arbitrarily make i the parent of j.
+                self.parent[root_j] = root_i
+                # Increment the rank of the new root tree.
+                self.rank[root_i] += 1
+</code></pre>
+        <h4 id="greedy-algorithms"><strong>6.2. Greedy Algorithms</strong></h4>
+        <p><strong>The Concept:</strong> A greedy algorithm makes the <strong>locally optimal choice at each step</strong> with the hope that this choice will lead to a <strong>globally optimal solution</strong>. It doesn't look ahead; it just picks the best option available right now.</p>
+        <p><strong>Example: Activity Selection Problem</strong></p>
+        <pre><code class="language-python">def activity_selection(activities):
+    """
+    Selects the maximum number of non-overlapping activities.
+    Activities are a list of tuples: (start_time, finish_time).
+    """
+    # 1. The Greedy Choice: Sort activities by their FINISH times.
+    # This is the key to the solution. By picking the activity that finishes
+    # earliest, we free up our resource (e.g., a room) as quickly as possible.
+    activities.sort(key=lambda x: x[1])
+
+    # List to store the activities we select.
+    selected = []
+    
+    # If there are no activities, return an empty list.
+    if not activities:
+        return selected
+
+    # 2. Select the first activity in the sorted list.
+    # It's guaranteed to be part of an optimal solution because it finishes first.
+    selected.append(activities[0])
+    
+    # Keep track of the finish time of the last activity we selected.
+    last_finish_time = activities[0][1]
+
+    # 3. Iterate through the rest of the activities.
+    for i in range(1, len(activities)):
+        current_activity = activities[i]
+        current_start_time = current_activity[0]
+        
+        # If the current activity starts after (or at the same time as)
+        # the last selected activity finished, it doesn't overlap.
+        if current_start_time >= last_finish_time:
+            # Select this activity.
+            selected.append(current_activity)
+            # Update the last finish time.
+            last_finish_time = current_activity[1]
+
+    return selected
+
+# --- Usage ---
+my_activities = [(1, 4), (3, 5), (0, 6), (5, 7), (8, 11), (12, 14)]
+result = activity_selection(my_activities)
+print(f"Selected activities: {result}") # Output: [(1, 4), (5, 7), (8, 11), (12, 14)]
+</code></pre>
+        <h4 id="dynamic-programming"><strong>6.3. Dynamic Programming</strong></h4>
+        <p><strong>The Concept:</strong> DP is an optimization technique that solves complex problems by breaking them down into simpler, <strong>overlapping subproblems</strong>. It stores the results of these subproblems to avoid recomputing them.</p>
+        <p><strong>Example: Fibonacci Sequence</strong></p>
+        <h6>1. Naive Recursive Solution (Inefficient)</h6>
+        <pre><code class="language-python">def fib_naive(n):
+    # Base case: The first two Fibonacci numbers.
+    if n <= 1:
+        return n
+    # Recursive step: F(n) = F(n-1) + F(n-2)
+    # This is very slow (O(2^n)) because it re-calculates the same values many times.
+    # For example, fib_naive(5) calls fib_naive(3) and fib_naive(4).
+    # fib_naive(4) ALSO calls fib_naive(3). The work for fib_naive(3) is done twice.
+    return fib_naive(n - 1) + fib_naive(n - 2)
+</code></pre>
+        <h6>2. Memoization (Top-Down DP)</h6>
+        <pre><code class="language-python"># A cache to store the results of subproblems we've already solved.
+memo_cache = {}
+
+def fib_memoized(n):
+    # If the result for n is already in our cache, return it immediately.
+    if n in memo_cache:
+        return memo_cache[n]
+    
+    # Base case for the recursion.
+    if n <= 1:
+        return n
+    
+    # If the result is not in the cache, compute it recursively.
+    result = fib_memoized(n - 1) + fib_memoized(n - 2)
+    
+    # Store the newly computed result in the cache before returning.
+    memo_cache[n] = result
+    return result
+</code></pre>
+        <h6>3. Tabulation (Bottom-Up DP)</h6>
+        <pre><code class="language-python">def fib_tabulated(n):
+    # Base case: if n is 0 or 1, return n.
+    if n <= 1:
+        return n
+    
+    # Create a table (a list) to store Fibonacci numbers up to n.
+    dp_table = [0] * (n + 1)
+    # Seed the base cases in the table.
+    dp_table[1] = 1
+    
+    # Iterate from 2 up to n, building the solution from the bottom up.
+    for i in range(2, n + 1):
+        # Each new Fibonacci number is the sum of the previous two.
+        dp_table[i] = dp_table[i - 1] + dp_table[i - 2]
+        
+    # The final answer is at the end of the table.
+    return dp_table[n]
+</code></pre>
+        <h6>4. Space-Optimized Tabulation</h6>
+        <pre><code class="language-python">def fib_optimized(n):
+    if n <= 1:
+        return n
+    
+    # We only need the previous two numbers, not the whole table.
+    # Initialize 'a' as F(0) and 'b' as F(1).
+    a, b = 0, 1
+    
+    # Loop n-1 times to get from F(1) to F(n).
+    for _ in range(n - 1):
+        # The new 'a' becomes the old 'b'.
+        # The new 'b' becomes the sum of the old 'a' and 'b'.
+        a, b = b, a + b
+        
+    # 'b' now holds the value for F(n).
+    return b
+</code></pre>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- TOC Generation ---
+            const tocContainer = document.getElementById('toc');
+            const headers = document.querySelectorAll('#main-content h3, #main-content h4');
+            let currentH3List = null;
+            headers.forEach(header => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${header.id}`;
+                a.textContent = header.textContent.replace(/<[^>]*>/g, '');
+                li.appendChild(a);
+                if (header.tagName === 'H3') {
+                    const ul = document.createElement('ul');
+                    li.appendChild(ul);
+                    tocContainer.appendChild(li);
+                    currentH3List = ul;
+                } else if (header.tagName === 'H4' && currentH3List) {
+                    currentH3List.appendChild(li);
+                } else {
+                    tocContainer.appendChild(li);
+                }
+            });
+
+            // --- Theme Toggle ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const lightThemeCss = document.getElementById('prism-theme-light');
+            const darkThemeCss = document.getElementById('prism-theme-dark');
+            const applyTheme = (theme) => {
+                document.documentElement.dataset.theme = theme; // Apply to HTML tag
+                localStorage.setItem('dsa-notes-theme', theme);
+                lightThemeCss.disabled = theme === 'dark';
+                darkThemeCss.disabled = theme === 'light';
+            };
+            themeToggle.addEventListener('click', () => {
+                const newTheme = (document.documentElement.dataset.theme || 'dark') === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+            applyTheme(localStorage.getItem('dsa-notes-theme') || 'dark');
+
+            // --- Sidebar Toggle ---
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const applySidebarState = (state) => {
+                document.documentElement.classList.toggle('sidebar-minimized', state === 'minimized'); // Apply to HTML tag
+                localStorage.setItem('dsa-sidebar-state', state);
+                sidebarToggle.textContent = state === 'minimized' ? '☰' : '✕';
+            };
+            sidebarToggle.addEventListener('click', () => {
+                const newState = document.documentElement.classList.contains('sidebar-minimized') ? 'expanded' : 'minimized';
+                applySidebarState(newState);
+            });
+            applySidebarState(localStorage.getItem('dsa-sidebar-state') || 'expanded');
+        });
+    </script>
+</body>
+</html>
